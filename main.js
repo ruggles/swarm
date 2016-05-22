@@ -20,7 +20,11 @@ game.update = function() {
         console.log("Mouse Clicked");
     }
 
+    // Run hive routines
+    game.myHive.update();
+
     // Collision Code
+    // If queen touches bug, bug becomes attracted to it
     for (var i=0; i<game.bugArray.length; i++){
         var x = game.bugArray[i].x;
         var y = game.bugArray[i].y;

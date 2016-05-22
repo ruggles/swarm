@@ -16,6 +16,12 @@ game.bugInit = function(bugNum) {
     }
 }
 
+game.bugAdd = function(x, y) { 
+    var bug;
+    bug = new game.Bug(x, y, 0, game.bugSpeed, game.bugRad, 'purple');
+    game.bugArray.push(bug);
+}
+
 // --- Objects ---
 
 // The hive
@@ -36,11 +42,24 @@ game.Hive = function(x, y) {
     this.y = y;
     this.width = 100;
     this.height = 100;
+    this.frameTicker = 0;
 }
 
 game.Hive.prototype.draw = function() {
     if (game.hivePicLoaded) {
         game.drawBitmap(game.hivePic, this.x, this.y, this.width, this.height);
+    }
+}
+
+game.Hive.prototype.update = function() {
+    this.frameTicker += 1;
+    
+    if (this.frameTicker%60 == 0) {
+        var spawnX;
+        var spawnY;
+        spawnX = this.x - (Math.random() - 0.5)*this.width/4;
+        spawnY = this.y - (Math.random() - 0.5)*this.height/4;
+        game.bugAdd(spawnX, spawnY);
     }
 }
 
