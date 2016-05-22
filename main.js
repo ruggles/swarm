@@ -100,7 +100,7 @@ game.bugArray = new Array();
 game.bugInit(50);
 
 game.myQueen = new game.Queen(0, 0, 25, 'blue');
-game.myHive = new game.Hive(350, 250);
+game.myHive = new game.Hive(400, 300);
 game.hiveImageLoad();
 
 /*for (var i = 0; i < game.bugArray.length; i++){

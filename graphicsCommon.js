@@ -32,8 +32,8 @@ game.resizeCanvas = function() {
     game.canvas.height = window.innerHeight*7/10;
 }
 
-game.drawBitmap = function(x, y, bitmap){
-    game.canvasContext.drawImage(bitmap, x, y);
+game.drawBitmap = function(bitmap, x, y, width, height) {
+    game.canvasContext.drawImage(bitmap, x - width/2, y - height/2, width, height);
 }
 
 // IIFE end

@@ -34,11 +34,13 @@ game.hiveImageLoad = function() {
 game.Hive = function(x, y) {
     this.x = x;
     this.y = y;
+    this.width = 100;
+    this.height = 100;
 }
 
 game.Hive.prototype.draw = function() {
     if (game.hivePicLoaded) {
-        game.drawBitmap(this.x, this.y, game.hivePic);
+        game.drawBitmap(game.hivePic, this.x, this.y, this.width, this.height);
     }
 }
 
