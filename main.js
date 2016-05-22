@@ -16,23 +16,46 @@ game.update = function() {
 
     if (game.clicked) {
         game.clicked = false;
+        //console.log(game.myQueen.isHit(game.clickedX, game.clickedY));
         console.log("Mouse Clicked");
+    }
+
+    // Collision Code
+    for (var i=0; i<game.bugArray.length; i++){
+        var x = game.bugArray[i].x;
+        var y = game.bugArray[i].y;
+        if (game.myQueen.isHit(x, y)) {
+            game.bugArray[i].setTarget(game.myQueen);
+        }
+    }
+    
+
+    // Movement Code
+    game.myQueen.move(game.mouseX, game.mouseY);
+
+    for (var i=0; i<game.bugArray.length; i++) {
+        game.bugArray[i].move();
+        game.bugArray[i].AI();
     }
 
 }
 
 // Drawing Functions
 game.render = function(){
-
     game.drawBackground(game.BG_COLOR);
-    game.drawMouseRect();
+    //game.myBug.draw();
+
+    game.myHive.draw();
+    game.myQueen.draw();
+
+    for (var i=0; i<game.bugArray.length; i++)
+        game.bugArray[i].draw();
 
 }
 
 game.drawMouseRect = function() {
     game.drawRect('blue', game.mouseX, game.mouseY, 50, 50);
 }
-
 // Testing & Debug Functions
 game.testDraw = function() {
     game.drawMousePos();
@@ -64,6 +87,8 @@ window.onload = function() {
 
 // --- Initialize Variables ---
 game.BG_COLOR = 'black';
+game.bugSpeed = 3;
+game.bugRad = 4;
 
 // Game Canvas
 game.canvas = document.getElementById('gameCanvas');
@@ -71,6 +96,19 @@ game.canvasContext = game.canvas.getContext('2d');
 //game.resizeCanvas();
 
 // Initialize Objects
+game.bugArray = new Array();
+game.bugInit(50);
+
+game.myQueen = new game.Queen(0, 0, 25, 'blue');
+game.myHive = new game.Hive(350, 250);
+game.hiveImageLoad();
+
+/*for (var i = 0; i < game.bugArray.length; i++){
+    game.bugArray[i].setTarget(game.myQueen)
+}*/
+
+
+//game.myBug = new game.Bug(400, 300, 0, game.bugSpeed, 10, 'purple');
 
 // Grab & update mouse movement
 game.mouseX = 0;

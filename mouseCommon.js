@@ -1,7 +1,4 @@
-// Template for basic code files
-// Use JS strict
-// Set in IIFE (Immediately-Invoked Function Expression
-// for containment
+// Common mouse capture & control functions
 
 // IIFE start
 (function() {
@@ -26,12 +23,24 @@ game.getMouseCoords = function(evt) {
     return mousePos
 }
 
+
+/*
+game.updateMouse uses global variables:
+    game.mouseX
+    game.mouseY
+*/
 game.updateMouse = function(evt) {
     var mousePos = game.getMouseCoords(evt);
     game.mouseX = mousePos.x
     game.mouseY = mousePos.y
 }
 
+/*
+game.mouseClick uses global variables:
+    game.clickedX
+    game.clickedY
+    game.clicked
+*/
 game.mouseClick = function(evt) {
     var mousePos = game.getMouseCoords(evt);
     game.clickedX = mousePos.x;
