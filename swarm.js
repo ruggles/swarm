@@ -43,6 +43,7 @@ game.Hive = function(x, y) {
     this.width = 100;
     this.height = 100;
     this.frameTicker = 0;
+    this.bugTicker = 0;
 }
 
 game.Hive.prototype.draw = function() {
@@ -57,9 +58,21 @@ game.Hive.prototype.update = function() {
     if (this.frameTicker%60 == 0) {
         var spawnX;
         var spawnY;
-        spawnX = this.x - (Math.random() - 0.5)*this.width/4;
-        spawnY = this.y - (Math.random() - 0.5)*this.height/4;
+        var spawnAngle;
+        
+        if (this.bugTicker%7 == 0) {
+            spawnX = this.x;
+            spawnY = this.y;
+        }
+        else {
+            spawnAngle = (this.bugTicker%7)*Math.PI/3;
+            spawnX = this.x + Math.cos(spawnAngle) * 0.12 * this.width;
+            spawnY = this.y - Math.sin(spawnAngle) * 0.12 * this.height;
+        }
+
         game.bugAdd(spawnX, spawnY);
+        
+        this.bugTicker += 1;
     }
 }
 
