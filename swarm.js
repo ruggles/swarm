@@ -22,6 +22,24 @@ game.bugAdd = function(x, y) {
     game.bugArray.push(bug);
 }
 
+// Assumes baddieArray exists
+game.baddieSpawn = function(target) {
+    
+    // Spawn in random place on circle around screen
+    var randomAngle = Math.random()*2*Math.PI;
+    var randomX = Math.cos(randomAngle) * game.canvas.height + game.canvas.width/2;
+    var randomY = -Math.sin(randomAngle) * game.canvas.height + game.canvas.height/2;
+
+    var baddieHolder = new game.Baddie(randomX, randomY, 20, 'red');
+    baddieHolder.setTarget(target);
+    game.baddieArray.push(baddieHolder);
+}
+
+game.hiveSpawn = function(x, y) {
+    var hive = new game.Hive(x, y);
+    game.hiveArray.push(hive);
+}
+
 // --- Objects ---
 
 // The hive
@@ -60,20 +78,24 @@ game.Hive.prototype.update = function() {
         var spawnY;
         var spawnAngle;
         
-        if (this.bugTicker%7 == 0) {
+        if (this.bugTicker == 0) {
             spawnX = this.x;
             spawnY = this.y;
+            game.bugAdd(spawnX, spawnY);
         }
-        else {
+        else if (this.bugTicker>0 && this.bugTicker<7) {
             spawnAngle = (this.bugTicker%7)*Math.PI/3;
             spawnX = this.x + Math.cos(spawnAngle) * 0.12 * this.width;
             spawnY = this.y - Math.sin(spawnAngle) * 0.12 * this.height;
+            game.bugAdd(spawnX, spawnY);
         }
 
-        game.bugAdd(spawnX, spawnY);
-        
         this.bugTicker += 1;
     }
+}
+
+game.Hive.prototype.resetBugSpawn = function() {
+    this.bugTicker = 0;
 }
 
 // The queen
@@ -195,6 +217,49 @@ game.Bug.prototype.setTarget = function(target) {
     var coords = target.getRandPoint();
     this.offsetX = coords.x;
     this.offsetY = coords.y;
+}
+
+game.Baddie = function(x, y, radius, color) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+
+    // Quickie placeholders
+    this.speed = 1;
+    this.health = 10;
+
+    this.target = null;
+}
+
+game.Baddie.prototype.draw = function() {
+    game.drawCircle(this.color, this.x, this.y, this.radius);
+}
+
+game.Baddie.prototype.setTarget = function(target) {
+    // All targets should have target.x & target.y
+    this.target = target;
+}
+
+game.Baddie.prototype.move = function() {
+    if (this.target != null) {
+        var angle = game.getDirection(this.x, this.y, this.target.x, this.target.y);
+        this.x += Math.cos(angle) * this.speed;
+        this.y -= Math.sin(angle) * this.speed;
+    }
+    else {
+        this.setTarget(game.hiveArray[0]);
+    }
+
+}
+
+game.Baddie.prototype.isHit = function(x, y) {
+    // Note, this is in board coordinates
+    if (game.getDistance(this.x, this.y, x, y) < this.radius) {
+        return true;
+    }
+
+    return false;
 }
 
 // IIFE end
