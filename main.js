@@ -112,6 +112,8 @@ game.render = function(){
     for (var i=0; i<game.bugArray.length; i++)
         game.bugArray[i].draw();
 
+    game.testEntity.draw();
+
 }
 
 game.drawMouseRect = function() {
@@ -173,15 +175,10 @@ for (var i=0; i<3; i++) {
 
 game.hiveImageLoad();
 
-
 game.baddieArray = new Array;
 
-/*for (var i = 0; i < game.bugArray.length; i++){
-    game.bugArray[i].setTarget(game.myQueen)
-}*/
-
-
-//game.myBug = new game.Bug(400, 300, 0, game.bugSpeed, 10, 'purple');
+// Entity test Code
+game.entityInit();
 
 // Grab & update mouse movement
 game.mouseX = 0;
