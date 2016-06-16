@@ -33,7 +33,7 @@ game.update = function() {
     }
 
     // Movement Code
-    game.myQueen.move(game.mouseX, game.mouseY);
+    game.myQueen.move({x: game.mouseX, y: game.mouseY});
 
     for (var i=0; i<game.bugArray.length; i++) {
         game.bugArray[i].move();
@@ -112,7 +112,7 @@ game.render = function(){
     for (var i=0; i<game.bugArray.length; i++)
         game.bugArray[i].draw();
 
-    game.testEntity.draw();
+    //game.testEntity.draw();
 
 }
 
@@ -164,8 +164,8 @@ game.canvasContext = game.canvas.getContext('2d');
 game.bugArray = new Array();
 game.bugInit(50);
 
-game.myQueen = new game.Queen(0, 0, 25, 'blue');
-
+game.myQueen = game.queenInit();
+ 
 game.hiveArray = new Array;
 
 for (var i=0; i<3; i++) {
@@ -178,11 +178,13 @@ game.hiveImageLoad();
 game.baddieArray = new Array;
 
 // Entity test Code
-game.entityInit();
+//game.entityInit();
 
 // Grab & update mouse movement
-game.mouseX = 0;
-game.mouseY = 0;
+
+// Assume mouse is offscreen before it touches screen
+game.mouseX = -200;
+game.mouseY = -200;
 game.canvas.onmousemove = function(evt) {game.updateMouse(evt)};
 
 game.clicked = false;

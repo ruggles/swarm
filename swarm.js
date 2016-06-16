@@ -6,6 +6,8 @@
 
 // --- Functions ---
 
+// Init and spawn functions
+
 game.bugInit = function(bugNum) {
     for (var i = 0; i < bugNum; i++) {
         var pos = {x:Math.random()*game.canvas.width,
@@ -23,6 +25,18 @@ game.bugSpawn = function(pos) {
     var bug = new game.Bug(pos, drawArray, 0, game.bugSpeed);
     game.bugArray.push(bug);
 
+}
+
+game.queenInit = function() {
+    var pos = {x: -200, y: -200};
+
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: 25, color: 'blue'};
+    var drawArray = new Array;
+    drawArray.push(drawCircle);
+
+    var queen = new game.Queen(pos, drawArray, drawCircle.radius);
+
+    return queen;
 }
 
 // Assumes baddieArray exists
@@ -100,20 +114,22 @@ game.Hive.prototype.resetBugSpawn = function() {
 }
 
 // The queen
-game.Queen = function(x, y, radius, color) {
-    this.x = x;
-    this.y = y;
+game.Queen = function(pos, drawArray, radius) {
+    this.x = pos.x;
+    this.y = pos.y;
+
+    this.drawObj = new game.draw(drawArray);
+
     this.radius = radius;
-    this.color = color;
 }
 
 game.Queen.prototype.draw = function() {
-    game.drawCircle(this.color, this.x, this.y, this.radius);
+    this.drawObj.draw(this.x, this.y);
 }
 
-game.Queen.prototype.move = function(x, y) {
-    this.x = x;
-    this.y = y;
+game.Queen.prototype.move = function(pos) {
+    this.x = pos.x;
+    this.y = pos.y;
 }
 
 game.Queen.prototype.isHit = function(x, y) {
