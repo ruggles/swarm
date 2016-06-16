@@ -7,19 +7,22 @@
 // --- Functions ---
 
 game.bugInit = function(bugNum) {
-    var bugHolder;
     for (var i = 0; i < bugNum; i++) {
-        bugHolder = new game.Bug(Math.random()*game.canvas.width, 
-                                 Math.random()*game.canvas.height,
-                                 0, game.bugSpeed, game.bugRad, 'purple')
-        game.bugArray.push(bugHolder);
+        var pos = {x:Math.random()*game.canvas.width,
+                   y:Math.random()*game.canvas.height};
+        game.bugSpawn(pos);
     }
 }
 
-game.bugAdd = function(x, y) { 
-    var bug;
-    bug = new game.Bug(x, y, 0, game.bugSpeed, game.bugRad, 'purple');
+game.bugSpawn = function(pos) { 
+
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: game.bugRad, color: 'purple'};
+    var drawArray = new Array;
+    drawArray.push(drawCircle);
+
+    var bug = new game.Bug(pos, drawArray, 0, game.bugSpeed);
     game.bugArray.push(bug);
+
 }
 
 // Assumes baddieArray exists
@@ -74,20 +77,18 @@ game.Hive.prototype.update = function() {
     this.frameTicker += 1;
     
     if (this.frameTicker%60 == 0) {
-        var spawnX;
-        var spawnY;
+        var spawnPos;
         var spawnAngle;
         
         if (this.bugTicker == 0) {
-            spawnX = this.x;
-            spawnY = this.y;
-            game.bugAdd(spawnX, spawnY);
+            spawnPos = {x: this.x, y: this.y};
+            game.bugSpawn(spawnPos);
         }
         else if (this.bugTicker>0 && this.bugTicker<7) {
             spawnAngle = (this.bugTicker%7)*Math.PI/3;
-            spawnX = this.x + Math.cos(spawnAngle) * 0.12 * this.width;
-            spawnY = this.y - Math.sin(spawnAngle) * 0.12 * this.height;
-            game.bugAdd(spawnX, spawnY);
+            spawnPos = {x:this.x + Math.cos(spawnAngle) * 0.12 * this.width,
+                        y:this.y - Math.sin(spawnAngle) * 0.12 * this.height}
+            game.bugSpawn(spawnPos);
         }
 
         this.bugTicker += 1;
@@ -139,11 +140,12 @@ game.Queen.prototype.getRandPoint = function() {
 
 
 // Bug Object!
-game.Bug = function(x, y, direction, speed, radius, color) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.color = color;
+game.Bug = function(pos, drawArray, direction, speed) {
+
+    this.x = pos.x;
+    this.y = pos.y;
+
+    this.drawObj = new game.draw(drawArray);
 
     this.direction = direction;
     this.speed = speed;
@@ -162,7 +164,7 @@ game.Bug = function(x, y, direction, speed, radius, color) {
 }
 
 game.Bug.prototype.draw = function() {
-    game.drawCircle(this.color, this.x, this.y, this.radius);
+    this.drawObj.draw(this.x, this.y);
 }
 
 game.Bug.prototype.move = function() {
