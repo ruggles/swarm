@@ -16,15 +16,14 @@ game.bugInit = function(bugNum) {
     }
 }
 
+// Assumes bugArray exists
 game.bugSpawn = function(pos) { 
-
     var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: game.bugRad, color: 'purple'};
     var drawArray = new Array;
     drawArray.push(drawCircle);
 
     var bug = new game.Bug(pos, drawArray, 0, game.bugSpeed);
     game.bugArray.push(bug);
-
 }
 
 game.queenInit = function() {
@@ -46,8 +45,13 @@ game.baddieSpawn = function(target) {
     var randomAngle = Math.random()*2*Math.PI;
     var randomX = Math.cos(randomAngle) * game.canvas.height + game.canvas.width/2;
     var randomY = -Math.sin(randomAngle) * game.canvas.height + game.canvas.height/2;
+    var radius = 20;
 
-    var baddieHolder = new game.Baddie(randomX, randomY, 20, 'red');
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
+    var drawArray = new Array;
+    drawArray.push(drawCircle);
+
+    var baddieHolder = new game.Baddie({x: randomX, y: randomY}, drawArray, radius);
     baddieHolder.setTarget(target);
     game.baddieArray.push(baddieHolder);
 }
@@ -237,11 +241,14 @@ game.Bug.prototype.setTarget = function(target) {
     this.offsetY = coords.y;
 }
 
-game.Baddie = function(x, y, radius, color) {
-    this.x = x;
-    this.y = y;
+
+// Baddie!
+game.Baddie = function(pos, drawArray, radius) {
+    this.x = pos.x;
+    this.y = pos.y;
     this.radius = radius;
-    this.color = color;
+
+    this.drawObj = new game.draw(drawArray);
 
     // Quickie placeholders
     this.speed = 1;
@@ -251,7 +258,7 @@ game.Baddie = function(x, y, radius, color) {
 }
 
 game.Baddie.prototype.draw = function() {
-    game.drawCircle(this.color, this.x, this.y, this.radius);
+    this.drawObj.draw(this.x, this.y);
 }
 
 game.Baddie.prototype.setTarget = function(target) {
