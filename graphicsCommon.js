@@ -36,5 +36,17 @@ game.drawBitmap = function(bitmap, x, y, width, height) {
     game.canvasContext.drawImage(bitmap, x - width/2, y - height/2, width, height);
 }
 
+game.isImageLoaded = function(imageElement) {
+    if (!imageElement.complete) {
+        return false;
+    }
+    else if (imageElement.naturalWidth === 0) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 // IIFE end
 })();

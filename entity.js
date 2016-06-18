@@ -58,9 +58,16 @@ game.draw.prototype.draw = function(x, y) {
             game.drawCircle(this.drawArray[i].color, x + this.drawArray[i].offX, 
                             y + this.drawArray[i].offY, this.drawArray[i].radius);
         }
-    }
-    
 
+        if (this.drawArray[i].type == 'image' &&
+            game.isImageLoaded(this.drawArray[i].bitmap)) {
+ 
+            game.drawBitmap(this.drawArray[i].bitmap, x + this.drawArray[i].offX,
+                            y + this.drawArray[i].offY, this.drawArray[i].width,
+                            this.drawArray[i].height); 
+
+        }
+    }
 }
 
 // hitDetect Class

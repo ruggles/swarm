@@ -56,9 +56,25 @@ game.baddieSpawn = function(target) {
     game.baddieArray.push(baddieHolder);
 }
 
-game.hiveSpawn = function(x, y) {
-    var hive = new game.Hive(x, y);
+game.hiveSpawn = function(pos) {
+
+    var drawImage = {type: 'image', bitmap: game.hivePic, offX: 0, offY: 0, 
+                     width: 100, height: 100};
+    var drawArray = new Array;
+    drawArray.push(drawImage);
+
+    var hive = new game.Hive(pos, drawArray);
     game.hiveArray.push(hive);
+
+}
+
+// assumes hiveArray exists
+game.hiveInit = function() {
+    for (var i=0; i<3; i++) {
+        game.hiveAngle = Math.PI*(i*(2/3) + 1/2);
+        game.hiveSpawn({x: 400+Math.cos(game.hiveAngle)*100, 
+                        y: 300-Math.sin(game.hiveAngle)*100});
+    }
 }
 
 // --- Objects ---
@@ -67,18 +83,17 @@ game.hiveSpawn = function(x, y) {
 
 // Load hive image into memory
 game.hivePic = document.createElement("img");
-game.hivePicLoaded = false;
 
 game.hiveImageLoad = function() {
-    game.hivePic.onload = function() {
-        game.hivePicLoaded = true;
-    }
     game.hivePic.src = "resources/Hive.png";
 }
 
-game.Hive = function(x, y) {
-    this.x = x;
-    this.y = y;
+game.Hive = function(pos, drawArray) {
+    this.x = pos.x;
+    this.y = pos.y;
+
+    this.drawObj = new game.draw(drawArray);
+
     this.width = 100;
     this.height = 100;
     this.frameTicker = 0;
@@ -86,9 +101,7 @@ game.Hive = function(x, y) {
 }
 
 game.Hive.prototype.draw = function() {
-    if (game.hivePicLoaded) {
-        game.drawBitmap(game.hivePic, this.x, this.y, this.width, this.height);
-    }
+     this.drawObj.draw(this.x, this.y);
 }
 
 game.Hive.prototype.update = function() {

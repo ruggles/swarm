@@ -167,11 +167,7 @@ game.bugInit(50);
 game.myQueen = game.queenInit();
  
 game.hiveArray = new Array;
-
-for (var i=0; i<3; i++) {
-    game.hiveAngle = Math.PI*(i*(2/3) + 1/2);
-    game.hiveSpawn(400+Math.cos(game.hiveAngle)*100, 300-Math.sin(game.hiveAngle)*100);
-}
+game.hiveInit();
 
 game.hiveImageLoad();
 
