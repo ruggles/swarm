@@ -14,31 +14,49 @@
 
 game.entityInit = function() {
     var position = {x: 100, y: 100};
+    var position2 = {x: 60, y: 55};
+
     var circle1 = {type: 'circle', offX: 0, offY: 0, radius: 25, color: 'green'};
     var circle2 = {type: 'circle', offX: 20, offY: 0, radius: 25, color: 'cyan'};
+    var drawArray = new Array;
+    drawArray.push(circle1);
+    drawArray.push(circle2);
 
-    var circArray = new Array;
-    circArray.push(circle1);
-    circArray.push(circle2);
+    var hitCirc1 = {offX: 0, offY: 0, radius:25};
+    var hitCirc2 = {offX: 20, offY: 0, radius:25};
+    var hitArray = new Array;
+    hitArray.push(hitCirc1);
+    hitArray.push(hitCirc2);
 
-    game.testEntity = new game.Entity(position, circArray, null, null, null);
+    game.testEntity1 = new game.Entity(position, drawArray, hitArray, null, null);
+    game.testEntity2 = new game.Entity(position2, drawArray, hitArray, null, null);
 }
 
 // Entity Class
 
-game.Entity = function(pos, drawArray, hitDetect, AI, move) {
+game.Entity = function(pos, drawArray, hitArray, AI, move) {
 
     this.x = pos.x;
     this.y = pos.y;
 
-    this.drawObj = new game.draw(drawArray);
+    this.drawObj = new game.Draw(drawArray);
+
+    this.hitObj = new game.HitCircle(hitArray);
 //    this.hitDetect = new game.hitDetect(hitDetect);
 //    this.AI = new game.AI(AI);
 //    this.move = new game.move(move);
 }
 
+game.Entity.prototype.getPos = function() {
+    return {x: this.x, y: this.y};
+}
+
 game.Entity.prototype.draw = function() {
     this.drawObj.draw(this.x, this.y);
+}
+
+game.Entity.prototype.getHitArray = function() {
+    return this.hitObj.getArray();
 }
 
 // Draw Class
@@ -46,12 +64,12 @@ game.Entity.prototype.draw = function() {
 // Each circle is defined by a radius, offset, and color
 // There's no need for absolute position, it's just fed to 
 // draw by the entity class
-game.draw = function(drawArray) {
+game.Draw = function(drawArray) {
     this.drawArray = drawArray;
 //    this.image = components.imageObj;
 }
 
-game.draw.prototype.draw = function(x, y) {
+game.Draw.prototype.draw = function(x, y) {
 
     for (var i=0; i<this.drawArray.length; i++) {
         if (this.drawArray[i].type == 'circle') {
@@ -70,7 +88,15 @@ game.draw.prototype.draw = function(x, y) {
     }
 }
 
-// hitDetect Class
+// hitDetect Class - Currently only holds array of hitCircle objects
+game.HitCircle = function(circleArray) {
+    this.circleArray = circleArray;
+}
+
+game.HitCircle.prototype.getArray = function() {
+    return this.circleArray;
+}
+
 // AI Class
 // Draw Class
 

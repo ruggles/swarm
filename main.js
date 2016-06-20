@@ -20,7 +20,8 @@ game.update = function() {
         console.log("Mouse Clicked");
     }
 
-    // Run hive routines
+    // --- Phase One - Objects act ---
+
     for (var i=0; i<game.hiveArray.length; i++) {
         game.hiveArray[i].update();
     }
@@ -43,7 +44,7 @@ game.update = function() {
     for (var i=0; i<game.baddieArray.length; i++)
         game.baddieArray[i].move();
 
-    game.numFrames += 1;
+    // --- Phase Two - Objects interact
 
     // --- Collision Code ---
 
@@ -83,6 +84,9 @@ game.update = function() {
                 game.hiveArray.splice(j, 1);
             }
         }
+
+       
+
     }
 
     // If queen touches hive, reset bug spawning
@@ -92,6 +96,8 @@ game.update = function() {
         }
     }
 
+    // --- Phase 3 - Increment World State ---
+    game.numFrames += 1;
 
 }
 
@@ -112,7 +118,8 @@ game.render = function(){
     for (var i=0; i<game.bugArray.length; i++)
         game.bugArray[i].draw();
 
-    //game.testEntity.draw();
+    game.testEntity1.draw();
+    game.testEntity2.draw();
 
 }
 
@@ -174,7 +181,7 @@ game.hiveImageLoad();
 game.baddieArray = new Array;
 
 // Entity test Code
-//game.entityInit();
+game.entityInit();
 
 // Grab & update mouse movement
 

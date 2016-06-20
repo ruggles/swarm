@@ -92,7 +92,7 @@ game.Hive = function(pos, drawArray) {
     this.x = pos.x;
     this.y = pos.y;
 
-    this.drawObj = new game.draw(drawArray);
+    this.drawObj = new game.Draw(drawArray);
 
     this.width = 100;
     this.height = 100;
@@ -135,7 +135,7 @@ game.Queen = function(pos, drawArray, radius) {
     this.x = pos.x;
     this.y = pos.y;
 
-    this.drawObj = new game.draw(drawArray);
+    this.drawObj = new game.Draw(drawArray);
 
     this.radius = radius;
 }
@@ -178,7 +178,7 @@ game.Bug = function(pos, drawArray, direction, speed) {
     this.x = pos.x;
     this.y = pos.y;
 
-    this.drawObj = new game.draw(drawArray);
+    this.drawObj = new game.Draw(drawArray);
 
     this.direction = direction;
     this.speed = speed;
@@ -261,7 +261,7 @@ game.Baddie = function(pos, drawArray, radius) {
     this.y = pos.y;
     this.radius = radius;
 
-    this.drawObj = new game.draw(drawArray);
+    this.drawObj = new game.Draw(drawArray);
 
     // Quickie placeholders
     this.speed = 1;
