@@ -50,17 +50,15 @@ game.update = function() {
 
     // Bug collision checks
     for (var i=0; i<game.bugArray.length; i++){
-        var x = game.bugArray[i].x;
-        var y = game.bugArray[i].y;
 
         // If queen touches bug, bug becomes attracted to it
-        if (game.myQueen.isHit(x, y)) {
+        if (game.circleCollision(game.myQueen, game.bugArray[i])) {
             game.bugArray[i].setTarget(game.myQueen);
         }
 
         for (var j=0; j<game.baddieArray.length; j++) {
             // If baddie touches bug, bug dies, baddie gets hurt
-            if (game.baddieArray[j].isHit(x, y)) {
+            if (game.circleCollision(game.baddieArray[j], game.bugArray[i])) {
                 game.bugArray.splice(i, 1);
                 game.baddieArray[j].health -= 1;
             }
@@ -78,9 +76,7 @@ game.update = function() {
     for (var i=0; i<game.baddieArray.length; i++) {
         
         for (var j=0; j<game.hiveArray.length; j++) {
-            var hiveX = game.hiveArray[j].x;
-            var hiveY = game.hiveArray[j].y;
-            if (game.baddieArray[i].isHit(hiveX, hiveY)) {
+            if (game.circleCollision(game.baddieArray[i], game.hiveArray[j])) {
                 game.hiveArray.splice(j, 1);
             }
         }
@@ -91,7 +87,7 @@ game.update = function() {
 
     // If queen touches hive, reset bug spawning
     for (var i=0; i<game.hiveArray.length; i++) {
-        if (game.myQueen.isHit(game.hiveArray[i].x, game.hiveArray[i].y)) {
+        if (game.circleCollision(game.hiveArray[i], game.myQueen)) {
             game.hiveArray[i].resetBugSpawn();
         }
     }
@@ -118,8 +114,8 @@ game.render = function(){
     for (var i=0; i<game.bugArray.length; i++)
         game.bugArray[i].draw();
 
-    game.testEntity1.draw();
-    game.testEntity2.draw();
+    //game.testEntity1.draw();
+    //game.testEntity2.draw();
 
 }
 
@@ -181,7 +177,7 @@ game.hiveImageLoad();
 game.baddieArray = new Array;
 
 // Entity test Code
-game.entityInit();
+//game.entityInit();
 
 // Grab & update mouse movement
 

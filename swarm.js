@@ -22,7 +22,11 @@ game.bugSpawn = function(pos) {
     var drawArray = new Array;
     drawArray.push(drawCircle);
 
-    var bug = new game.Bug(pos, drawArray, 0, game.bugSpeed);
+    var hitCircle = {offX: 0, offY: 0, radius: game.bugRad};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var bug = new game.Bug(pos, drawArray, hitArray, 0, game.bugSpeed);
     game.bugArray.push(bug);
 }
 
@@ -33,7 +37,11 @@ game.queenInit = function() {
     var drawArray = new Array;
     drawArray.push(drawCircle);
 
-    var queen = new game.Queen(pos, drawArray, drawCircle.radius);
+    var hitCircle = {offX: 0, offY: 0, radius: 25};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var queen = new game.Queen(pos, drawArray, hitArray);
 
     return queen;
 }
@@ -51,7 +59,11 @@ game.baddieSpawn = function(target) {
     var drawArray = new Array;
     drawArray.push(drawCircle);
 
-    var baddieHolder = new game.Baddie({x: randomX, y: randomY}, drawArray, radius);
+    var hitCircle = {offX: 0, offY: 0, radius: radius};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var baddieHolder = new game.Baddie({x: randomX, y: randomY}, drawArray, hitArray);
     baddieHolder.setTarget(target);
     game.baddieArray.push(baddieHolder);
 }
@@ -63,7 +75,11 @@ game.hiveSpawn = function(pos) {
     var drawArray = new Array;
     drawArray.push(drawImage);
 
-    var hive = new game.Hive(pos, drawArray);
+    var hitCircle = {offX: 0, offY: 0, radius: 10};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var hive = new game.Hive(pos, drawArray, hitArray);
     game.hiveArray.push(hive);
 
 }
@@ -88,11 +104,13 @@ game.hiveImageLoad = function() {
     game.hivePic.src = "resources/Hive.png";
 }
 
-game.Hive = function(pos, drawArray) {
+game.Hive = function(pos, drawArray, hitArray) {
     this.x = pos.x;
     this.y = pos.y;
 
     this.drawObj = new game.Draw(drawArray);
+
+    this.hitObj = new game.HitCircle(hitArray);
 
     this.width = 100;
     this.height = 100;
@@ -100,8 +118,16 @@ game.Hive = function(pos, drawArray) {
     this.bugTicker = 0;
 }
 
+game.Hive.prototype.getPos = function() {
+    return {x: this.x, y: this.y};
+}
+
 game.Hive.prototype.draw = function() {
-     this.drawObj.draw(this.x, this.y);
+    this.drawObj.draw(this.x, this.y);
+}
+
+game.Hive.prototype.getHitArray = function() {
+    return this.hitObj.getArray();
 }
 
 game.Hive.prototype.update = function() {
@@ -131,17 +157,25 @@ game.Hive.prototype.resetBugSpawn = function() {
 }
 
 // The queen
-game.Queen = function(pos, drawArray, radius) {
+game.Queen = function(pos, drawArray, hitArray) {
     this.x = pos.x;
     this.y = pos.y;
 
     this.drawObj = new game.Draw(drawArray);
 
-    this.radius = radius;
+    this.hitObj = new game.HitCircle(hitArray);
+}
+
+game.Queen.prototype.getPos = function() {
+    return {x: this.x, y: this.y};
 }
 
 game.Queen.prototype.draw = function() {
     this.drawObj.draw(this.x, this.y);
+}
+
+game.Queen.prototype.getHitArray = function() {
+    return this.hitObj.getArray();
 }
 
 game.Queen.prototype.move = function(pos) {
@@ -149,19 +183,12 @@ game.Queen.prototype.move = function(pos) {
     this.y = pos.y;
 }
 
-game.Queen.prototype.isHit = function(x, y) {
-    // Note, this is in board coordinates
-    if (game.getDistance(this.x, this.y, x, y) < this.radius) {
-        return true;
-    }
-
-    return false;
-}
-
 game.Queen.prototype.getRandPoint = function() {
     // This is relative to queen
+    var radius = this.getHitArray()[0].radius;
+
     var randAngle = Math.random() * 2*Math.PI;
-    var randRadius = Math.random() * this.radius;
+    var randRadius = Math.random() * radius;
 
     var randX = Math.cos(randAngle) * randRadius;
     var randY = Math.sin(randAngle) * randRadius;
@@ -173,12 +200,14 @@ game.Queen.prototype.getRandPoint = function() {
 
 
 // Bug Object!
-game.Bug = function(pos, drawArray, direction, speed) {
+game.Bug = function(pos, drawArray, hitArray, direction, speed) {
 
     this.x = pos.x;
     this.y = pos.y;
 
     this.drawObj = new game.Draw(drawArray);
+
+    this.hitObj = new game.HitCircle(hitArray);
 
     this.direction = direction;
     this.speed = speed;
@@ -196,8 +225,16 @@ game.Bug = function(pos, drawArray, direction, speed) {
     this.target = null
 }
 
+game.Bug.prototype.getPos = function() {
+    return {x: this.x, y: this.y};
+}
+
 game.Bug.prototype.draw = function() {
     this.drawObj.draw(this.x, this.y);
+}
+
+game.Bug.prototype.getHitArray = function() {
+    return this.hitObj.getArray();
 }
 
 game.Bug.prototype.move = function() {
@@ -256,12 +293,13 @@ game.Bug.prototype.setTarget = function(target) {
 
 
 // Baddie!
-game.Baddie = function(pos, drawArray, radius) {
+game.Baddie = function(pos, drawArray, hitArray) {
     this.x = pos.x;
     this.y = pos.y;
-    this.radius = radius;
 
     this.drawObj = new game.Draw(drawArray);
+
+    this.hitObj = new game.HitCircle(hitArray);
 
     // Quickie placeholders
     this.speed = 1;
@@ -270,8 +308,16 @@ game.Baddie = function(pos, drawArray, radius) {
     this.target = null;
 }
 
+game.Baddie.prototype.getPos = function() {
+    return {x: this.x, y: this.y};
+}
+
 game.Baddie.prototype.draw = function() {
     this.drawObj.draw(this.x, this.y);
+}
+
+game.Baddie.prototype.getHitArray = function() {
+    return this.hitObj.getArray();
 }
 
 game.Baddie.prototype.setTarget = function(target) {
@@ -289,15 +335,6 @@ game.Baddie.prototype.move = function() {
         this.setTarget(game.hiveArray[0]);
     }
 
-}
-
-game.Baddie.prototype.isHit = function(x, y) {
-    // Note, this is in board coordinates
-    if (game.getDistance(this.x, this.y, x, y) < this.radius) {
-        return true;
-    }
-
-    return false;
 }
 
 // IIFE end
