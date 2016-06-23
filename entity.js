@@ -34,7 +34,7 @@ game.entityInit = function() {
 
 // Entity Class
 
-game.Entity = function(pos, drawArray, hitArray, AI, move) {
+game.Entity = function(pos, drawArray, hitArray) {
 
     this.x = pos.x;
     this.y = pos.y;
@@ -42,7 +42,6 @@ game.Entity = function(pos, drawArray, hitArray, AI, move) {
     this.drawObj = new game.Draw(drawArray);
 
     this.hitObj = new game.HitCircle(hitArray);
-//    this.hitDetect = new game.hitDetect(hitDetect);
 //    this.AI = new game.AI(AI);
 //    this.move = new game.move(move);
 }

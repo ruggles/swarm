@@ -105,12 +105,8 @@ game.hiveImageLoad = function() {
 }
 
 game.Hive = function(pos, drawArray, hitArray) {
-    this.x = pos.x;
-    this.y = pos.y;
 
-    this.drawObj = new game.Draw(drawArray);
-
-    this.hitObj = new game.HitCircle(hitArray);
+    game.Entity.call(this, pos, drawArray, hitArray);
 
     this.width = 100;
     this.height = 100;
@@ -118,17 +114,8 @@ game.Hive = function(pos, drawArray, hitArray) {
     this.bugTicker = 0;
 }
 
-game.Hive.prototype.getPos = function() {
-    return {x: this.x, y: this.y};
-}
-
-game.Hive.prototype.draw = function() {
-    this.drawObj.draw(this.x, this.y);
-}
-
-game.Hive.prototype.getHitArray = function() {
-    return this.hitObj.getArray();
-}
+game.Hive.prototype = Object.create(game.Entity.prototype);
+game.Hive.prototype.constructor = game.Hive;
 
 game.Hive.prototype.update = function() {
     this.frameTicker += 1;
@@ -156,27 +143,15 @@ game.Hive.prototype.resetBugSpawn = function() {
     this.bugTicker = 0;
 }
 
-// The queen
+// The queen - Child of entity
 game.Queen = function(pos, drawArray, hitArray) {
-    this.x = pos.x;
-    this.y = pos.y;
 
-    this.drawObj = new game.Draw(drawArray);
+    game.Entity.call(this, pos, drawArray, hitArray);
 
-    this.hitObj = new game.HitCircle(hitArray);
 }
 
-game.Queen.prototype.getPos = function() {
-    return {x: this.x, y: this.y};
-}
-
-game.Queen.prototype.draw = function() {
-    this.drawObj.draw(this.x, this.y);
-}
-
-game.Queen.prototype.getHitArray = function() {
-    return this.hitObj.getArray();
-}
+game.Queen.prototype = Object.create(game.Entity.prototype);
+game.Queen.prototype.constructor = game.Queen;
 
 game.Queen.prototype.move = function(pos) {
     this.x = pos.x;
@@ -199,15 +174,10 @@ game.Queen.prototype.getRandPoint = function() {
 
 
 
-// Bug Object!
+// Bug Object! - Child of entity
 game.Bug = function(pos, drawArray, hitArray, direction, speed) {
 
-    this.x = pos.x;
-    this.y = pos.y;
-
-    this.drawObj = new game.Draw(drawArray);
-
-    this.hitObj = new game.HitCircle(hitArray);
+    game.Entity.call(this, pos, drawArray, hitArray);
 
     this.direction = direction;
     this.speed = speed;
@@ -225,17 +195,8 @@ game.Bug = function(pos, drawArray, hitArray, direction, speed) {
     this.target = null
 }
 
-game.Bug.prototype.getPos = function() {
-    return {x: this.x, y: this.y};
-}
-
-game.Bug.prototype.draw = function() {
-    this.drawObj.draw(this.x, this.y);
-}
-
-game.Bug.prototype.getHitArray = function() {
-    return this.hitObj.getArray();
-}
+game.Bug.prototype = Object.create(game.Entity.prototype);
+game.Bug.prototype.constructor = game.Bug;
 
 game.Bug.prototype.move = function() {
     if (this.target == null)
@@ -294,12 +255,8 @@ game.Bug.prototype.setTarget = function(target) {
 
 // Baddie!
 game.Baddie = function(pos, drawArray, hitArray) {
-    this.x = pos.x;
-    this.y = pos.y;
 
-    this.drawObj = new game.Draw(drawArray);
-
-    this.hitObj = new game.HitCircle(hitArray);
+    game.Entity.call(this, pos, drawArray, hitArray);
 
     // Quickie placeholders
     this.speed = 1;
@@ -308,17 +265,8 @@ game.Baddie = function(pos, drawArray, hitArray) {
     this.target = null;
 }
 
-game.Baddie.prototype.getPos = function() {
-    return {x: this.x, y: this.y};
-}
-
-game.Baddie.prototype.draw = function() {
-    this.drawObj.draw(this.x, this.y);
-}
-
-game.Baddie.prototype.getHitArray = function() {
-    return this.hitObj.getArray();
-}
+game.Baddie.prototype = Object.create(game.Entity.prototype);
+game.Baddie.prototype.constructor = game.Baddie;
 
 game.Baddie.prototype.setTarget = function(target) {
     // All targets should have target.x & target.y
