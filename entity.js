@@ -34,16 +34,16 @@ game.entityInit = function() {
 
 // Entity Class
 
-game.Entity = function(pos, drawArray, hitArray) {
+game.Entity = function(pos, drawArray, hitArray, moveSpeed, trackSpeed) {
 
     this.x = pos.x;
     this.y = pos.y;
 
     this.drawObj = new game.Draw(drawArray);
-
     this.hitObj = new game.HitCircle(hitArray);
+    this.moveObj = new game.Move(moveSpeed, trackSpeed);
+
 //    this.AI = new game.AI(AI);
-//    this.move = new game.move(move);
 }
 
 game.Entity.prototype.getPos = function() {
@@ -56,6 +56,17 @@ game.Entity.prototype.draw = function() {
 
 game.Entity.prototype.getHitArray = function() {
     return this.hitObj.getArray();
+}
+
+game.Entity.prototype.move = function() { 
+    var delta = this.moveObj.move({x: this.x, y: this.y});
+
+    this.x += delta.x;
+    this.y += delta.y;
+}
+
+game.Entity.prototype.setTarget = function(target) {
+    this.moveObj.setTarget(target);
 }
 
 // Draw Class
@@ -96,8 +107,66 @@ game.HitCircle.prototype.getArray = function() {
     return this.circleArray;
 }
 
+// Move Class
+game.Move = function(moveSpeed, trackSpeed) {
+    // Need to plan this out
+
+    this.speed = moveSpeed;
+    this.trackSpeed = trackSpeed;    
+
+    this.direction = 0;
+
+    // These determine where on the object to target
+    this.offsetX = 0;
+    this.offsetY = 0;
+
+    this.ticker = 0;
+
+    this.trackX = 0;
+    this.trackY = 0;
+    this.trackDir = 0;
+    this.target = null;
+}
+
+// Takes in current object position, returns delta
+game.Move.prototype.move = function(pos) {
+    if (this.target == null) {
+        return {x: 0, y: 0};
+    }
+
+    this.track();
+
+    var toDir = game.getDirection(pos.x, pos.y, this.trackX, this.trackY);
+    this.direction = toDir; 
+
+    var deltaX = Math.cos(this.direction) * this.speed;
+    var deltaY = -Math.sin(this.direction) * this.speed;
+
+    return {x: deltaX, y: deltaY};
+}
+
+game.Move.prototype.track = function() {
+    var toDir = game.getDirection(this.trackX, this.trackY, 
+                this.target.x + this.offsetX, this.target.y + this.offsetY);
+
+    this.trackDir = toDir;
+
+    this.trackX += Math.cos(this.trackDir) * this.trackSpeed;
+    this.trackY -= Math.sin(this.trackDir) * this.trackSpeed;
+}
+
+game.Move.prototype.setTarget = function(target) {
+    if (this.target == target) {
+        return;
+    }
+
+    this.target = target;
+    this.trackX = target.x;
+    this.trackY = target.y;
+}
+
+
 // AI Class
-// Draw Class
 
 // IIFE end
 })();

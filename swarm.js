@@ -26,7 +26,9 @@ game.bugSpawn = function(pos) {
     var hitArray = new Array;
     hitArray.push(hitCircle);
 
-    var bug = new game.Bug(pos, drawArray, hitArray, 0, game.bugSpeed);
+    var trackSpeed = 4
+
+    var bug = new game.Bug(pos, drawArray, hitArray, game.bugSpeed, trackSpeed);
     game.bugArray.push(bug);
 }
 
@@ -41,7 +43,7 @@ game.queenInit = function() {
     var hitArray = new Array;
     hitArray.push(hitCircle);
 
-    var queen = new game.Queen(pos, drawArray, hitArray);
+    var queen = new game.Queen(pos, drawArray, hitArray, 10, 10);
 
     return queen;
 }
@@ -63,7 +65,8 @@ game.baddieSpawn = function(target) {
     var hitArray = new Array;
     hitArray.push(hitCircle);
 
-    var baddieHolder = new game.Baddie({x: randomX, y: randomY}, drawArray, hitArray);
+    var baddieHolder = new game.Baddie({x: randomX, y: randomY}, drawArray, hitArray,
+                                        1, 5);
     baddieHolder.setTarget(target);
     game.baddieArray.push(baddieHolder);
 }
@@ -79,7 +82,7 @@ game.hiveSpawn = function(pos) {
     var hitArray = new Array;
     hitArray.push(hitCircle);
 
-    var hive = new game.Hive(pos, drawArray, hitArray);
+    var hive = new game.Hive(pos, drawArray, hitArray, 0, 0);
     game.hiveArray.push(hive);
 
 }
@@ -95,7 +98,7 @@ game.hiveInit = function() {
 
 // --- Objects ---
 
-// The hive
+// The hive - Child of Entity
 
 // Load hive image into memory
 game.hivePic = document.createElement("img");
@@ -104,9 +107,9 @@ game.hiveImageLoad = function() {
     game.hivePic.src = "resources/Hive.png";
 }
 
-game.Hive = function(pos, drawArray, hitArray) {
+game.Hive = function(pos, drawArray, hitArray, moveSpeed, trackSpeed) {
 
-    game.Entity.call(this, pos, drawArray, hitArray);
+    game.Entity.call(this, pos, drawArray, hitArray, moveSpeed, trackSpeed);
 
     this.width = 100;
     this.height = 100;
@@ -144,9 +147,9 @@ game.Hive.prototype.resetBugSpawn = function() {
 }
 
 // The queen - Child of entity
-game.Queen = function(pos, drawArray, hitArray) {
+game.Queen = function(pos, drawArray, hitArray, moveSpeed, trackSpeed) {
 
-    game.Entity.call(this, pos, drawArray, hitArray);
+    game.Entity.call(this, pos, drawArray, hitArray, moveSpeed, trackSpeed);
 
 }
 
@@ -175,13 +178,13 @@ game.Queen.prototype.getRandPoint = function() {
 
 
 // Bug Object! - Child of entity
-game.Bug = function(pos, drawArray, hitArray, direction, speed) {
+game.Bug = function(pos, drawArray, hitArray, moveSpeed, trackSpeed) {
 
-    game.Entity.call(this, pos, drawArray, hitArray);
+    game.Entity.call(this, pos, drawArray, hitArray, moveSpeed, trackSpeed);
 
-    this.direction = direction;
-    this.speed = speed;
+    this.speed = moveSpeed;
 
+    this.direction = 0;
     this.offsetX = 0;
     this.offsetY = 0;
 
@@ -190,7 +193,7 @@ game.Bug = function(pos, drawArray, hitArray, direction, speed) {
     this.trackX = 0;
     this.trackY = 0;
     this.trackDir = 0;
-    this.trackSpeed = 4;
+    this.trackSpeed = trackSpeed;
 
     this.target = null
 }
@@ -253,10 +256,10 @@ game.Bug.prototype.setTarget = function(target) {
 }
 
 
-// Baddie!
-game.Baddie = function(pos, drawArray, hitArray) {
+// Baddie! - Child of Entity
+game.Baddie = function(pos, drawArray, hitArray, moveSpeed, trackSpeed) {
 
-    game.Entity.call(this, pos, drawArray, hitArray);
+    game.Entity.call(this, pos, drawArray, hitArray, moveSpeed, trackSpeed);
 
     // Quickie placeholders
     this.speed = 1;
@@ -268,22 +271,6 @@ game.Baddie = function(pos, drawArray, hitArray) {
 game.Baddie.prototype = Object.create(game.Entity.prototype);
 game.Baddie.prototype.constructor = game.Baddie;
 
-game.Baddie.prototype.setTarget = function(target) {
-    // All targets should have target.x & target.y
-    this.target = target;
-}
-
-game.Baddie.prototype.move = function() {
-    if (this.target != null) {
-        var angle = game.getDirection(this.x, this.y, this.target.x, this.target.y);
-        this.x += Math.cos(angle) * this.speed;
-        this.y -= Math.sin(angle) * this.speed;
-    }
-    else {
-        this.setTarget(game.hiveArray[0]);
-    }
-
-}
 
 // IIFE end
 })();
