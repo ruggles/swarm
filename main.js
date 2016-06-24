@@ -38,7 +38,6 @@ game.update = function() {
 
     for (var i=0; i<game.bugArray.length; i++) {
         game.bugArray[i].move();
-        game.bugArray[i].AI();
     }
 
     for (var i=0; i<game.baddieArray.length; i++)
@@ -80,8 +79,6 @@ game.update = function() {
                 game.hiveArray.splice(j, 1);
             }
         }
-
-       
 
     }
 

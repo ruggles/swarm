@@ -161,100 +161,14 @@ game.Queen.prototype.move = function(pos) {
     this.y = pos.y;
 }
 
-game.Queen.prototype.getRandPoint = function() {
-    // This is relative to queen
-    var radius = this.getHitArray()[0].radius;
-
-    var randAngle = Math.random() * 2*Math.PI;
-    var randRadius = Math.random() * radius;
-
-    var randX = Math.cos(randAngle) * randRadius;
-    var randY = Math.sin(randAngle) * randRadius;
-
-    var coords = {x: randX, y: randY};
-    return coords; 
-}
-
-
-
 // Bug Object! - Child of entity
 game.Bug = function(pos, drawArray, hitArray, moveSpeed, trackSpeed) {
 
     game.Entity.call(this, pos, drawArray, hitArray, moveSpeed, trackSpeed);
-
-    this.speed = moveSpeed;
-
-    this.direction = 0;
-    this.offsetX = 0;
-    this.offsetY = 0;
-
-    this.i = 0;
-
-    this.trackX = 0;
-    this.trackY = 0;
-    this.trackDir = 0;
-    this.trackSpeed = trackSpeed;
-
-    this.target = null
 }
 
 game.Bug.prototype = Object.create(game.Entity.prototype);
 game.Bug.prototype.constructor = game.Bug;
-
-game.Bug.prototype.move = function() {
-    if (this.target == null)
-        return;
-
-    this.x += Math.cos(this.direction) * this.speed;
-    this.y -= Math.sin(this.direction) * this.speed;
-
-}
-
-game.Bug.prototype.track = function(target) {
-    this.i += 1;
-    
-    // Replace this w/ random point on hitbox
-    if (this.i%60 == 0) {
-        var coords = target.getRandPoint();
-        this.offsetX = coords.x;
-        this.offsetY = coords.y;
-    }
-
-    var toDir = game.getDirection(this.trackX, this.trackY, target.x + this.offsetX, target.y + this.offsetY);
-
-    this.trackDir = toDir;
-
-    this.trackX += Math.cos(this.trackDir) * this.trackSpeed;
-    this.trackY -= Math.sin(this.trackDir) * this.trackSpeed;
-}
-
-game.Bug.prototype.AI = function() {
-    
-    if (this.target == null) {
-        return;
-    }
-
-    this.track(this.target);
-    
-    var toDir = game.getDirection(this.x, this.y, this.trackX, this.trackY);
-    this.direction = toDir;
-}
-
-game.Bug.prototype.setTarget = function(target) {
-    // In order for an object to be a target, it much have
-    // target.x, target.y, target.getRandPoint()
-    if (this.target == target)
-        return;
-
-
-    this.target = target;
-    this.trackX = target.x;
-    this.trackY = target.y;
-    var coords = target.getRandPoint();
-    this.offsetX = coords.x;
-    this.offsetY = coords.y;
-}
-
 
 // Baddie! - Child of Entity
 game.Baddie = function(pos, drawArray, hitArray, moveSpeed, trackSpeed) {
@@ -262,10 +176,7 @@ game.Baddie = function(pos, drawArray, hitArray, moveSpeed, trackSpeed) {
     game.Entity.call(this, pos, drawArray, hitArray, moveSpeed, trackSpeed);
 
     // Quickie placeholders
-    this.speed = 1;
     this.health = 10;
-
-    this.target = null;
 }
 
 game.Baddie.prototype = Object.create(game.Entity.prototype);

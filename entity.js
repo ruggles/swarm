@@ -58,6 +58,10 @@ game.Entity.prototype.getHitArray = function() {
     return this.hitObj.getArray();
 }
 
+game.Entity.prototype.getRandPoint = function() {
+    return this.hitObj.getRandPoint();
+}
+
 game.Entity.prototype.move = function() { 
     var delta = this.moveObj.move({x: this.x, y: this.y});
 
@@ -107,6 +111,20 @@ game.HitCircle.prototype.getArray = function() {
     return this.circleArray;
 }
 
+game.HitCircle.prototype.getRandPoint = function() {
+    var randomCircle = Math.floor(Math.random()*this.circleArray.length);
+    
+    var radius = this.circleArray[randomCircle].radius;
+    var randAngle = Math.random() * 2*Math.PI;
+    var randRadius = Math.random() * radius;
+
+    var randX = Math.cos(randAngle) * randRadius + this.circleArray[randomCircle].offX;
+    var randY = -Math.sin(randAngle) * randRadius + this.circleArray[randomCircle].offY;
+
+    var coords = {x: randX, y: randY};
+    return coords;
+}
+
 // Move Class
 game.Move = function(moveSpeed, trackSpeed) {
     // Need to plan this out
@@ -146,6 +164,16 @@ game.Move.prototype.move = function(pos) {
 }
 
 game.Move.prototype.track = function() {
+
+    this.ticker += 1;
+
+    // Replace this w/ random point on hitbox
+    if (this.ticker%60 == 0) {
+        var coords = this.target.getRandPoint();
+        this.offsetX = coords.x;
+        this.offsetY = coords.y;
+    }
+
     var toDir = game.getDirection(this.trackX, this.trackY, 
                 this.target.x + this.offsetX, this.target.y + this.offsetY);
 
@@ -163,6 +191,10 @@ game.Move.prototype.setTarget = function(target) {
     this.target = target;
     this.trackX = target.x;
     this.trackY = target.y;
+
+    var coords = target.getRandPoint();
+    this.offsetX = coords.x;
+    this.offsetY = coords.y;
 }
 
 
