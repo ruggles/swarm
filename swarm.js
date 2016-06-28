@@ -54,8 +54,10 @@ game.queenInit = function() {
     return queen;
 }
 
+
+// Badguy spawn functions! should be many!
 // Assumes baddieArray exists
-game.baddieSpawn = function(target) {
+game.boringBaddieSpawn = function(target) {
     
     // Spawn in random place on circle around screen
     var randomAngle = Math.random()*2*Math.PI;
@@ -73,11 +75,59 @@ game.baddieSpawn = function(target) {
 
     var moveSpeed = 1.2;
     var trackSpeed = 3;
+    var health = 10;
 
     var baddieHolder = new game.Baddie({x: randomX, y: randomY}, drawArray, hitArray,
-                                        moveSpeed, trackSpeed);
+                                        moveSpeed, trackSpeed, health);
     baddieHolder.setTarget(target);
     game.baddieArray.push(baddieHolder);
+}
+
+// patterned baddies
+game.spiralBaddieSpawn = function(target) {
+    
+    // Spawn in random place on circle around screen
+    var numBads = 3;
+    var randomAngle = Math.random()*2*Math.PI;
+    
+    var randomX;
+    var randomY;
+    var baddieHolder = new Array;
+
+    var radius = 5;
+
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
+    var drawArray = new Array;
+    drawArray.push(drawCircle);
+
+    var hitCircle = {offX: 0, offY: 0, radius: radius};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var moveSpeed = 0.8;
+    var trackSpeed = 2;
+    var health = 2;
+    var angleFactor = 2 * Math.PI / numBads;
+
+    for (var i = 0; i<numBads; i++) {
+        randomX = Math.cos(randomAngle + i*angleFactor)*game.canvas.height 
+                  + game.canvas.width/2;
+        randomY = -Math.sin(randomAngle + i*angleFactor)*game.canvas.height
+                  + game.canvas.height/2;
+        
+        baddieHolder[i] = new game.Baddie({x: randomX, y: randomY}, drawArray, hitArray,
+                                       moveSpeed, trackSpeed, health);
+
+        if (i > 0) {
+            baddieHolder[i].setTarget(baddieHolder[i-1]);
+        }
+
+
+    }
+    baddieHolder[0].setTarget(baddieHolder[numBads-1]);
+
+    for (var i=0; i<numBads; i++)
+        game.baddieArray.push(baddieHolder[i]);
 }
 
 game.hiveSpawn = function(pos) {
@@ -180,12 +230,12 @@ game.Bug.prototype = Object.create(game.Entity.prototype);
 game.Bug.prototype.constructor = game.Bug;
 
 // Baddie! - Child of Entity
-game.Baddie = function(pos, drawArray, hitArray, moveSpeed, trackSpeed) {
+game.Baddie = function(pos, drawArray, hitArray, moveSpeed, trackSpeed, health) {
 
     game.Entity.call(this, pos, drawArray, hitArray, moveSpeed, trackSpeed);
 
     // Quickie placeholders
-    this.health = 10;
+    this.health = health;
 }
 
 game.Baddie.prototype = Object.create(game.Entity.prototype);
