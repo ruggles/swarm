@@ -84,10 +84,9 @@ game.boringBaddieSpawn = function(target) {
 }
 
 // patterned baddies
-game.spiralBaddieSpawn = function(target) {
+game.spiralBaddieSpawn = function(target, numBads) {
     
     // Spawn in random place on circle around screen
-    var numBads = 3;
     var randomAngle = Math.random()*2*Math.PI;
     
     var randomX;
@@ -109,6 +108,55 @@ game.spiralBaddieSpawn = function(target) {
     var health = 2;
     var angleFactor = 2 * Math.PI / numBads;
 
+    var center = target.getPos();
+
+
+    for (var i = 0; i<numBads; i++) {
+        randomX = Math.cos(randomAngle + i*angleFactor)*game.canvas.height 
+                  + center.x;
+        randomY = -Math.sin(randomAngle + i*angleFactor)*game.canvas.height
+                  + center.y;
+        
+        baddieHolder[i] = new game.Baddie({x: randomX, y: randomY}, drawArray, hitArray,
+                                       moveSpeed, trackSpeed, health);
+
+        if (i > 0) {
+            baddieHolder[i].setTarget(baddieHolder[i-1]);
+        }
+
+
+    }
+    baddieHolder[0].setTarget(baddieHolder[numBads-1]);
+
+    for (var i=0; i<numBads; i++)
+        game.baddieArray.push(baddieHolder[i]);
+}
+
+game.curveBaddieSpawn = function(target, numBads) {
+    
+    // Spawn in random place on circle around screen
+    var randomAngle = Math.random()*2*Math.PI;
+    
+    var randomX;
+    var randomY;
+    var baddieHolder = new Array;
+
+    var radius = 5;
+
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
+    var drawArray = new Array;
+    drawArray.push(drawCircle);
+
+    var hitCircle = {offX: 0, offY: 0, radius: radius};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var moveSpeed = 1.5;
+    var trackSpeed = 2;
+    var health = 2;
+    var angleFactor = Math.PI / 9;
+
+
     for (var i = 0; i<numBads; i++) {
         randomX = Math.cos(randomAngle + i*angleFactor)*game.canvas.height 
                   + game.canvas.width/2;
@@ -124,7 +172,7 @@ game.spiralBaddieSpawn = function(target) {
 
 
     }
-    baddieHolder[0].setTarget(baddieHolder[numBads-1]);
+    baddieHolder[0].setTarget(target);
 
     for (var i=0; i<numBads; i++)
         game.baddieArray.push(baddieHolder[i]);
