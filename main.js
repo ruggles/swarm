@@ -150,8 +150,6 @@ window.onload = function() {
 
 // --- Initialize Variables ---
 game.BG_COLOR = 'black';
-game.bugSpeed = 3;
-game.bugRad = 4;
 game.numFrames = 0;
 game.difficulty = 0;
 

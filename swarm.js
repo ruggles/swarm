@@ -17,29 +17,35 @@ game.bugInit = function(bugNum) {
 }
 
 // Assumes bugArray exists
-game.bugSpawn = function(pos) { 
-    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: game.bugRad, color: 'purple'};
+
+game.bugSpawn = function(pos) {
+    var bugRadius = 4;
+    
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: bugRadius, color: 'purple'};
     var drawArray = new Array;
     drawArray.push(drawCircle);
 
-    var hitCircle = {offX: 0, offY: 0, radius: game.bugRad};
+    var hitCircle = {offX: 0, offY: 0, radius: bugRadius};
     var hitArray = new Array;
     hitArray.push(hitCircle);
 
-    var trackSpeed = 4
+    var bugSpeed = 4;
+    var trackSpeed = 5;
 
-    var bug = new game.Bug(pos, drawArray, hitArray, game.bugSpeed, trackSpeed);
+    var bug = new game.Bug(pos, drawArray, hitArray, bugSpeed, trackSpeed);
     game.bugArray.push(bug);
 }
 
 game.queenInit = function() {
     var pos = {x: -200, y: -200};
 
-    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: 25, color: 'blue'};
+    var queenRadius = 20
+
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: queenRadius, color: 'blue'};
     var drawArray = new Array;
     drawArray.push(drawCircle);
 
-    var hitCircle = {offX: 0, offY: 0, radius: 25};
+    var hitCircle = {offX: 0, offY: 0, radius: queenRadius};
     var hitArray = new Array;
     hitArray.push(hitCircle);
 
@@ -55,7 +61,7 @@ game.baddieSpawn = function(target) {
     var randomAngle = Math.random()*2*Math.PI;
     var randomX = Math.cos(randomAngle) * game.canvas.height + game.canvas.width/2;
     var randomY = -Math.sin(randomAngle) * game.canvas.height + game.canvas.height/2;
-    var radius = 20;
+    var radius = 15;
 
     var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
     var drawArray = new Array;
@@ -65,8 +71,11 @@ game.baddieSpawn = function(target) {
     var hitArray = new Array;
     hitArray.push(hitCircle);
 
+    var moveSpeed = 1.2;
+    var trackSpeed = 3;
+
     var baddieHolder = new game.Baddie({x: randomX, y: randomY}, drawArray, hitArray,
-                                        1, 5);
+                                        moveSpeed, trackSpeed);
     baddieHolder.setTarget(target);
     game.baddieArray.push(baddieHolder);
 }
@@ -91,8 +100,8 @@ game.hiveSpawn = function(pos) {
 game.hiveInit = function() {
     for (var i=0; i<3; i++) {
         game.hiveAngle = Math.PI*(i*(2/3) + 1/2);
-        game.hiveSpawn({x: 400+Math.cos(game.hiveAngle)*100, 
-                        y: 300-Math.sin(game.hiveAngle)*100});
+        game.hiveSpawn({x: 400+Math.cos(game.hiveAngle)*90, 
+                        y: 300-Math.sin(game.hiveAngle)*90});
     }
 }
 
