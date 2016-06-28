@@ -178,6 +178,52 @@ game.curveBaddieSpawn = function(target, numBads) {
         game.baddieArray.push(baddieHolder[i]);
 }
 
+
+game.spiralBaddieSpawn = function(target, numBads) {
+    
+    // Spawn in random place on circle around screen
+    var randomAngle = Math.random()*2*Math.PI;
+    
+    var randomX;
+    var randomY;
+    var baddieHolder = new Array;
+
+    var radius = 5;
+
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
+    var drawArray = new Array;
+    drawArray.push(drawCircle);
+
+    var hitCircle = {offX: 0, offY: 0, radius: radius};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var moveSpeed = 1.5;
+    var trackSpeed = 2;
+    var health = 2;
+    var angleFactor = Math.PI / 18;
+    var distFactor = 50;
+
+
+    for (var i = 0; i<numBads; i++) {
+        randomX = Math.cos(randomAngle + i*angleFactor)*(game.canvas.height + distFactor*i) 
+                  + game.canvas.width/2;
+        randomY = -Math.sin(randomAngle + i*angleFactor)*(game.canvas.height + distFactor*i)
+                  + game.canvas.height/2;
+        
+        baddieHolder[i] = new game.Baddie({x: randomX, y: randomY}, drawArray, hitArray,
+                                       moveSpeed, trackSpeed, health);
+
+        baddieHolder[i].setTarget(target);
+        
+
+
+    }
+
+    for (var i=0; i<numBads; i++)
+        game.baddieArray.push(baddieHolder[i]);
+}
+
 game.hiveSpawn = function(pos) {
 
     var drawImage = {type: 'image', bitmap: game.hivePic, offX: 0, offY: 0, 
