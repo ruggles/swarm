@@ -83,16 +83,35 @@ game.boringBaddieSpawn = function(target) {
     game.baddieArray.push(baddieHolder);
 }
 
-// patterned baddies
-game.spiralBaddieSpawn = function(target, numBads) {
+game.pulseBaddieSpawn = function(target) {
     
     // Spawn in random place on circle around screen
     var randomAngle = Math.random()*2*Math.PI;
-    
-    var randomX;
-    var randomY;
-    var baddieHolder = new Array;
+    var randomX = Math.cos(randomAngle) * game.canvas.height + game.canvas.width/2;
+    var randomY = -Math.sin(randomAngle) * game.canvas.height + game.canvas.height/2;
+    var radius = 15;
 
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
+    var drawArray = new Array;
+    drawArray.push(drawCircle);
+
+    var hitCircle = {offX: 0, offY: 0, radius: radius};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var moveSpeed = 1.2;
+    var trackSpeed = 3;
+    var health = 10;
+
+    var baddieHolder = new game.PulseBaddie({x: randomX, y: randomY}, drawArray, hitArray,
+                                        moveSpeed, trackSpeed, health);
+    baddieHolder.setTarget(target);
+    game.baddieArray.push(baddieHolder);
+}
+
+game.miniBaddieSpawn = function(pos, target) {
+    
+    // Spawn in random place on circle around screen
     var radius = 5;
 
     var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
@@ -103,33 +122,40 @@ game.spiralBaddieSpawn = function(target, numBads) {
     var hitArray = new Array;
     hitArray.push(hitCircle);
 
-    var moveSpeed = 0.8;
-    var trackSpeed = 2;
-    var health = 2;
-    var angleFactor = 2 * Math.PI / numBads;
+    var moveSpeed = 1.2;
+    var trackSpeed = 3;
+    var health = 1;
 
-    var center = target.getPos();
+    var baddieHolder = new game.Baddie({x: pos.x, y: pos.y}, drawArray, hitArray,
+                                        moveSpeed, trackSpeed, health);
+    baddieHolder.setTarget(target);
+    game.baddieArray.push(baddieHolder);
+}
 
+game.motherBaddieSpawn = function(target) {
+    
+    // Spawn in random place on circle around screen
+    var randomAngle = Math.random()*2*Math.PI;
+    var randomX = Math.cos(randomAngle) * game.canvas.height + game.canvas.width/2;
+    var randomY = -Math.sin(randomAngle) * game.canvas.height + game.canvas.height/2;
+    var radius = 15;
 
-    for (var i = 0; i<numBads; i++) {
-        randomX = Math.cos(randomAngle + i*angleFactor)*game.canvas.height 
-                  + center.x;
-        randomY = -Math.sin(randomAngle + i*angleFactor)*game.canvas.height
-                  + center.y;
-        
-        baddieHolder[i] = new game.Baddie({x: randomX, y: randomY}, drawArray, hitArray,
-                                       moveSpeed, trackSpeed, health);
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
+    var drawArray = new Array;
+    drawArray.push(drawCircle);
 
-        if (i > 0) {
-            baddieHolder[i].setTarget(baddieHolder[i-1]);
-        }
+    var hitCircle = {offX: 0, offY: 0, radius: radius};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
 
+    var moveSpeed = 0.5;
+    var trackSpeed = 3;
+    var health = 10;
 
-    }
-    baddieHolder[0].setTarget(baddieHolder[numBads-1]);
-
-    for (var i=0; i<numBads; i++)
-        game.baddieArray.push(baddieHolder[i]);
+    var baddieHolder = new game.MotherBaddie({x: randomX, y: randomY}, drawArray, hitArray,
+                                        moveSpeed, trackSpeed, health);
+    baddieHolder.setTarget(target);
+    game.baddieArray.push(baddieHolder);
 }
 
 game.curveBaddieSpawn = function(target, numBads) {
@@ -334,6 +360,63 @@ game.Baddie = function(pos, drawArray, hitArray, moveSpeed, trackSpeed, health) 
 
 game.Baddie.prototype = Object.create(game.Entity.prototype);
 game.Baddie.prototype.constructor = game.Baddie;
+
+// Motherbad - Child of Entity
+game.MotherBaddie = function(pos, drawArray, hitArray, moveSpeed, trackSpeed, health) {
+
+    game.Entity.call(this, pos, drawArray, hitArray, moveSpeed, trackSpeed);
+
+    // Quickie placeholders
+    this.health = health;
+    this.ticker = 0;
+}
+
+game.MotherBaddie.prototype = Object.create(game.Entity.prototype);
+game.MotherBaddie.prototype.constructor = game.Baddie;
+
+game.MotherBaddie.prototype.move = function() {
+
+    var delta = this.moveObj.move({x: this.x, y: this.y});
+
+    this.x += delta.x;
+    this.y += delta.y;
+
+    var pos = this.getRandPoint();
+    
+    var targetNum = Math.floor(Math.random()*game.bugArray.length);
+
+    if (this.ticker%(60*2) == 0) {
+        game.miniBaddieSpawn({x: this.x + pos.x, y: this.y + pos.y}, game.bugArray[targetNum]);
+    }
+
+    this.ticker += 1;
+}
+
+// Motherbad - Child of Entity
+game.PulseBaddie = function(pos, drawArray, hitArray, moveSpeed, trackSpeed, health) {
+
+    game.Entity.call(this, pos, drawArray, hitArray, moveSpeed, trackSpeed);
+
+    // Quickie placeholders
+    this.health = health;
+    this.ticker = 0;
+    this.absoluteSpeed = moveSpeed;
+}
+
+game.PulseBaddie.prototype = Object.create(game.Entity.prototype);
+game.PulseBaddie.prototype.constructor = game.Baddie;
+
+game.PulseBaddie.prototype.move = function() {
+
+    var delta = this.moveObj.move({x: this.x, y: this.y});
+
+    this.x += delta.x;
+    this.y += delta.y;
+
+    this.moveObj.speed = this.absoluteSpeed*(Math.sin(this.ticker*Math.PI/60) + 0.5);
+
+    this.ticker += 1;
+}
 
 
 // IIFE end
