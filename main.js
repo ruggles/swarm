@@ -28,7 +28,7 @@ game.update = function() {
     
     // spawn badguy every few seconds
     if ((game.numFrames%(60*10 - game.difficulty)) == 0) {
-        game.pulseBaddieSpawn(game.hiveArray[0], 5);
+        game.pulseCircleBaddieSpawn(game.hiveArray[0], 5);
         game.difficulty += 1;
         //console.log("Badguy Spawned");
     }
