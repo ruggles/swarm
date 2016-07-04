@@ -27,11 +27,15 @@ game.update = function() {
     }
     
     // spawn badguy every few seconds
+    /*
     if ((game.numFrames%(60*10 - game.difficulty)) == 0) {
         game.pulseCircleBaddieSpawn(game.hiveArray[0], 5);
         game.difficulty += 1;
         //console.log("Badguy Spawned");
     }
+    */
+
+    game.myDirector.update();
 
     // Movement Code
     game.myQueen.move({x: game.mouseX, y: game.mouseY});
@@ -170,6 +174,8 @@ game.hiveInit();
 game.hiveImageLoad();
 
 game.baddieArray = new Array;
+
+game.myDirector = new game.Director();
 
 // Entity test Code
 //game.entityInit();

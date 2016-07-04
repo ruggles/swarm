@@ -12,6 +12,49 @@ game.bugInit = function(bugNum) {
     }
 }
 
+game.queenInit = function() {
+    var pos = {x: -200, y: -200};
+
+    var queenRadius = 20
+
+    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: queenRadius, color: 'blue'};
+    var drawArray = new Array;
+    drawArray.push(drawCircle);
+
+    var hitCircle = {offX: 0, offY: 0, radius: queenRadius};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var queen = new game.Queen(pos, drawArray, hitArray, 10, 10);
+
+    return queen;
+}
+
+game.hiveSpawn = function(pos) {
+
+    var drawImage = {type: 'image', bitmap: game.hivePic, offX: 0, offY: 0, 
+                     width: 100, height: 100};
+    var drawArray = new Array;
+    drawArray.push(drawImage);
+
+    var hitCircle = {offX: 0, offY: 0, radius: 10};
+    var hitArray = new Array;
+    hitArray.push(hitCircle);
+
+    var hive = new game.Hive(pos, drawArray, hitArray, 0, 0);
+    game.hiveArray.push(hive);
+
+}
+
+// assumes hiveArray exists
+game.hiveInit = function() {
+    for (var i=0; i<3; i++) {
+        game.hiveAngle = Math.PI*(i*(2/3) + 1/2);
+        game.hiveSpawn({x: 400+Math.cos(game.hiveAngle)*90, 
+                        y: 300-Math.sin(game.hiveAngle)*90});
+    }
+}
+
 // Assumes bugArray exists
 
 game.bugSpawn = function(pos) {
@@ -31,26 +74,6 @@ game.bugSpawn = function(pos) {
     var bug = new game.Bug(pos, drawArray, hitArray, bugSpeed, trackSpeed);
     game.bugArray.push(bug);
 }
-
-game.queenInit = function() {
-    var pos = {x: -200, y: -200};
-
-    var queenRadius = 20
-
-    var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: queenRadius, color: 'blue'};
-    var drawArray = new Array;
-    drawArray.push(drawCircle);
-
-    var hitCircle = {offX: 0, offY: 0, radius: queenRadius};
-    var hitArray = new Array;
-    hitArray.push(hitCircle);
-
-    var queen = new game.Queen(pos, drawArray, hitArray, 10, 10);
-
-    return queen;
-}
-
-
 // Badguy spawn functions! should be many!
 // Assumes baddieArray exists
 game.boringBaddieSpawn = function(target) {
@@ -79,7 +102,7 @@ game.boringBaddieSpawn = function(target) {
     game.baddieArray.push(baddieHolder);
 }
 
-game.pulseCircleBaddieSpawn = function(target, numBads) {
+game.pulseCircleBaddieSpawn = function(target) {
     
     // Spawn in random place on circle around screen
     var randomAngle = Math.random()*2*Math.PI;
@@ -88,6 +111,7 @@ game.pulseCircleBaddieSpawn = function(target, numBads) {
     var randomY;
     var baddieHolder = new Array;
 
+    var numBads = 5;
     var radius = 5;
 
     var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
@@ -127,7 +151,7 @@ game.pulseCircleBaddieSpawn = function(target, numBads) {
         game.baddieArray.push(baddieHolder[i]);
 }
 
-game.circleBaddieSpawn = function(target, numBads) {
+game.circleBaddieSpawn = function(target) {
     
     // Spawn in random place on circle around screen
     var randomAngle = Math.random()*2*Math.PI;
@@ -137,6 +161,7 @@ game.circleBaddieSpawn = function(target, numBads) {
     var baddieHolder = new Array;
 
     var radius = 5;
+    var numBads = 5;
 
     var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
     var drawArray = new Array;
@@ -380,30 +405,6 @@ game.spiralBaddieSpawn = function(target, numBads) {
     }
 }
 
-game.hiveSpawn = function(pos) {
-
-    var drawImage = {type: 'image', bitmap: game.hivePic, offX: 0, offY: 0, 
-                     width: 100, height: 100};
-    var drawArray = new Array;
-    drawArray.push(drawImage);
-
-    var hitCircle = {offX: 0, offY: 0, radius: 10};
-    var hitArray = new Array;
-    hitArray.push(hitCircle);
-
-    var hive = new game.Hive(pos, drawArray, hitArray, 0, 0);
-    game.hiveArray.push(hive);
-
-}
-
-// assumes hiveArray exists
-game.hiveInit = function() {
-    for (var i=0; i<3; i++) {
-        game.hiveAngle = Math.PI*(i*(2/3) + 1/2);
-        game.hiveSpawn({x: 400+Math.cos(game.hiveAngle)*90, 
-                        y: 300-Math.sin(game.hiveAngle)*90});
-    }
-}
 
 // IIFE end
 })();
