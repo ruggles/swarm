@@ -4,7 +4,7 @@
 (function() {
 "use strict";
 
-game.initialPoints = 100;
+game.initialPoints = 50;
 
 game.Director = function() {
 
@@ -12,17 +12,17 @@ game.Director = function() {
     this.points = game.initialPoints;
     this.wave = 1;
 
-    this.coolDown = 15*60;
+    this.coolDown = 20*60;
 
     this.attackArray = new Array;
     this.attackArray.push(game.boringAttack);
     this.attackArray.push(game.pulseCircleAttack);
     this.attackArray.push(game.circleAttack);
-    // pulseBaddieSpawn
-    // motherBaddieSpawn
-    // curveBaddieSpawn
-    // wigglyBaddieSpawn
-    // spiralBaddieSpawn
+    this.attackArray.push(game.pulseAttack);
+    this.attackArray.push(game.motherAttack);
+    this.attackArray.push(game.curveAttack);
+    this.attackArray.push(game.wigglyAttack);
+    this.attackArray.push(game.spiralAttack);
 
 }
 
@@ -49,11 +49,23 @@ game.Director.prototype.update = function() {
 
 // Attack list
 
-game.boringAttack = {spawn: game.boringBaddieSpawn, points: 10, coolDown: 1*60};
+game.boringAttack = {spawn: game.boringBaddieSpawn, points: 10, coolDown: 0.5*60};
 game.pulseCircleAttack = {spawn: game.pulseCircleBaddieSpawn, points: 30, 
-                          coolDown: 1.5*60};
+                          coolDown: 0.5*60};
 game.circleAttack = {spawn: game.circleBaddieSpawn, points: 20, 
+                     coolDown: 0.5*60};
+game.pulseAttack = {spawn: game.pulseBaddieSpawn, points: 10, 
+                     coolDown: 0};
+game.motherAttack = {spawn: game.motherBaddieSpawn, points: 30, 
+                     coolDown: 0.5*60};
+game.curveAttack = {spawn: game.curveBaddieSpawn, points: 30, 
+                     coolDown: 2*60};
+game.wigglyAttack = {spawn: game.wigglyBaddieSpawn, points: 25, 
                      coolDown: 1.5*60};
+game.spiralAttack = {spawn: game.spiralBaddieSpawn, points: 30, 
+                     coolDown: 2*60};
+
+
 
 // IIFE end
 })();

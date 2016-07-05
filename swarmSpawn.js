@@ -68,8 +68,8 @@ game.bugSpawn = function(pos) {
     var hitArray = new Array;
     hitArray.push(hitCircle);
 
-    var bugSpeed = 4;
-    var trackSpeed = 5;
+    var bugSpeed = 5;
+    var trackSpeed = 6;
 
     var bug = new game.Bug(pos, drawArray, hitArray, bugSpeed, trackSpeed);
     game.bugArray.push(bug);
@@ -276,7 +276,7 @@ game.motherBaddieSpawn = function(target) {
     game.baddieArray.push(baddieHolder);
 }
 
-game.curveBaddieSpawn = function(target, numBads) {
+game.curveBaddieSpawn = function(target) {
     
     // Spawn in random place on circle around screen
     var randomAngle = Math.random()*2*Math.PI;
@@ -286,6 +286,8 @@ game.curveBaddieSpawn = function(target, numBads) {
     var baddieHolder = new Array;
 
     var radius = 5;
+
+    var numBads = 5;
 
     var drawCircle = {type: 'circle', offX: 0, offY: 0, radius: radius, color: 'red'};
     var drawArray = new Array;
@@ -323,7 +325,7 @@ game.curveBaddieSpawn = function(target, numBads) {
 }
 
 
-game.wigglyBaddieSpawn = function(target, numBads) {
+game.wigglyBaddieSpawn = function(target) {
     
     // Spawn in random place on circle around screen
     var randomAngle = Math.random()*2*Math.PI;
@@ -331,6 +333,8 @@ game.wigglyBaddieSpawn = function(target, numBads) {
     var randomX;
     var randomY;
     var baddieHolder;
+
+    var numBads = 5;
 
     var radius = 5;
 
@@ -366,7 +370,7 @@ game.wigglyBaddieSpawn = function(target, numBads) {
     }
 }
 
-game.spiralBaddieSpawn = function(target, numBads) {
+game.spiralBaddieSpawn = function(target) {
     
     // Spawn in random place on circle around screen
     var randomAngle = Math.random()*2*Math.PI;
@@ -374,6 +378,7 @@ game.spiralBaddieSpawn = function(target, numBads) {
     var randomX;
     var randomY;
     var baddieHolder;
+    var numBads = 5;
 
     var radius = 5;
 

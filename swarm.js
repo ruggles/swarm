@@ -114,7 +114,7 @@ game.MotherBaddie.prototype.move = function() {
     
     var targetNum = Math.floor(Math.random()*game.bugArray.length);
 
-    if (this.ticker%(60*2) == 0) {
+    if (this.ticker%(60*2.5) == 0) {
         game.miniBaddieSpawn({x: this.x + pos.x, y: this.y + pos.y}, game.bugArray[targetNum]);
     }
 
