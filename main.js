@@ -115,9 +115,6 @@ game.render = function(){
     for (var i=0; i<game.bugArray.length; i++)
         game.bugArray[i].draw();
 
-    //game.testEntity1.draw();
-    //game.testEntity2.draw();
-
 }
 
 game.drawMouseRect = function() {
@@ -143,8 +140,8 @@ game.gameLoop = function() {
     game.render();
 
 
-    // Testing
-    game.testDraw();
+    // Testing / Debug
+    // game.testDraw();
 }
 
 // --- Objects ---
